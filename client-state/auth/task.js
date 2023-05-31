@@ -33,7 +33,7 @@ signinBtn.addEventListener('click', function(event) {
     data.append('login', signinForm.elements.login.value);
     data.append('password', signinForm.elements.password.value);
      
-    xhr.open('POST', 'https://netology-slow-rest.herokuapp.com/auth.php');
+    xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/auth');
     xhr.send(data);
 
     xhr.addEventListener('readystatechange', () => {
