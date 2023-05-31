@@ -1,59 +1,35 @@
-let signin = document.getElementById('signin');
-let signinForm = document.getElementById('signin__form');
-let signinBtn = document.getElementById('signin__btn');
-let welcome = document.getElementById('welcome');
-let userId = document.getElementById('user_id');
-let logout = document.getElementById('logout');
+const signin = document.getElementById('signin');
+const signinForm = document.getElementById('signin__form');
+const welcome = document.getElementById('welcome');
+const signinBtn = document.getElementById('signin__btn');
 
-window.addEventListener('load', function() {
-    try {
-        let answer = JSON.parse(localStorage.getItem('auth'));
+signin.classList.add('signin_active');
 
-        welcome.classList.add('welcome_active');
-        userId.innerText = answer;
+var xhr = new XMLHttpRequest();
 
-    } catch(e) {
-        signin.classList.add('signin_active');
-        return null;
-    }
-});
-
-logout.addEventListener('click', function(event) {
-    localStorage.setItem('auth', '');
-    welcome.classList.remove('welcome_active');
-    signin.classList.add('signin_active');
+signinBtn.addEventListener('click', function() {
 
     event.preventDefault();
-});
+    const formData = new FormData(signinForm);
 
-signinBtn.addEventListener('click', function(event) {
-    let xhr = new XMLHttpRequest();
-    let data = new FormData();
-
-    data.append('login', signinForm.elements.login.value);
-    data.append('password', signinForm.elements.password.value);
-     
     xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/auth');
-    xhr.send(data);
+    xhr.send(formData);
 
-    xhr.addEventListener('readystatechange', () => {
-        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-            let answer = JSON.parse(xhr.responseText);
+    xhr.onreadystatechange = function() {
 
-            if (answer.success) {
+        if (this.readyState == xhr.DONE && this.status == 200) {
+            const json = JSON.parse(xhr.responseText);
+
+            if (json.success) {
+                localStorage.userId = json.user_id;
                 signin.classList.remove('signin_active');
                 welcome.classList.add('welcome_active');
-                userId.innerText = answer.user_id;
-
-                localStorage.setItem('auth', answer.user_id);
-                
-            } else {
-                alert('Неверный логин/пароль');
-            }
-
+                welcome.innerHTML = `
+                  Добро пожаловать, пользователь #<span id='${json.user_id}'>${json.user_id}</span>
+                  <button class='btn' id='logout__btn' onclick='localStorage.clear(); window.location.reload();'>Выйти</button>
+                `;
+            } else { alert('Неверные логин/пароль'); }
             signinForm.reset();
-        }    
-    });    
-
-    event.preventDefault();
+        }
+    }
 });
