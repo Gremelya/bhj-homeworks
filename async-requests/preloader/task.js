@@ -9,7 +9,7 @@ if (fromLocalStorage !== null) {
 
     renderAnswer(answer);
 
-    xhr.open('GET', 'https://netology-slow-rest.herokuapp.com/');
+    xhr.open('GET', 'https://students.netoservices.ru/nestjs-backend/slow-get-courses');
     xhr.send();
 
     xhr.addEventListener('readystatechange', () => {
@@ -22,7 +22,7 @@ if (fromLocalStorage !== null) {
     });
 
 } else {
-    xhr.open('GET', 'https://netology-slow-rest.herokuapp.com/');
+    xhr.open('GET', 'https://students.netoservices.ru/nestjs-backend/slow-get-courses');
     xhr.send();
     
     xhr.addEventListener('readystatechange', () => {
