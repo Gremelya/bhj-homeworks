@@ -5,7 +5,7 @@ let id,
     answers;
 let xhr = new XMLHttpRequest();
 
-xhr.open('GET', 'https://students.netoservices.ru/nestjs-backend/poll.php');
+xhr.open('GET', 'https://students.netoservices.ru/nestjs-backend/poll');
 xhr.send();
 
 xhr.addEventListener('readystatechange', () => {
@@ -33,7 +33,7 @@ xhr.addEventListener('readystatechange', () => {
                 let indexOfanswer = answers.indexOf(event.target);
                 xhr = new XMLHttpRequest();
 
-                xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/poll.php');
+                xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/poll');
                 xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 xhr.send(`vote=${id}&answer=${indexOfanswer}`);
 
