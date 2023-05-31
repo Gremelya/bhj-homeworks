@@ -20,6 +20,6 @@ function upload(file) {
         progress.value = event.loaded;
     }
   
-    xhr.open('POST', 'https://netology-slow-rest.herokuapp.com/upload.php');
+    xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/upload');
     xhr.send(file);
 }
