@@ -1,35 +1,46 @@
 const signin = document.getElementById('signin');
-const signinForm = document.getElementById('signin__form');
-const welcome = document.getElementById('welcome');
-const signinBtn = document.getElementById('signin__btn');
+const form = document.getElementById('signin__form');
+const btnExit = document.querySelector('.deauthorization');
+const welcome = document.querySelector('.welcome');
 
-signin.classList.add('signin_active');
+const userId = document.getElementById('user_id');
 
-var xhr = new XMLHttpRequest();
 
-signinBtn.addEventListener('click', function() {
+const showGreet =() => {
+  signin.classList.remove('signin_active');
+  welcome.classList.add('welcome_active');
+};
 
-    event.preventDefault();
-    const formData = new FormData(signinForm);
-
-    xhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/auth');
-    xhr.send(formData);
-
-    xhr.onreadystatechange = function() {
-
-        if (this.readyState == xhr.DONE && this.status == 200) {
-            const json = JSON.parse(xhr.responseText);
-
-            if (json.success) {
-                localStorage.userId = json.user_id;
-                signin.classList.remove('signin_active');
-                welcome.classList.add('welcome_active');
-                welcome.innerHTML = `
-                  Добро пожаловать, пользователь #<span id='${json.user_id}'>${json.user_id}</span>
-                  <button class='btn' id='logout__btn' onclick='localStorage.clear(); window.location.reload();'>Выйти</button>
-                `;
-            } else { alert('Неверные логин/пароль'); }
-            signinForm.reset();
-        }
+window.addEventListener('load', ()=> {
+    if (localStorage.loginId) {
+        showGreet();
+        userId.textContent = localStorage.loginId;
     }
+});
+
+form.addEventListener('submit', (e)=> {
+    e.preventDefault()
+    let userDate = new FormData(form);
+    let request = new XMLHttpRequest();
+    request.open('POST', 'https://students.netoservices.ru/nestjs-backend/auth');
+    request.responseType = 'json'
+    request.send(userDate);
+    request.addEventListener('load', () => {
+            let data = request.response;
+            if (data.success) {
+                showGreet()
+                userId.textContent = data.user_id
+                localStorage.loginId = data.user_id
+            }  else {
+                alert('Неверный логин/пароль');
+                form.reset();
+            }
+    });
+});
+
+btnExit.addEventListener('click', ()=> {
+    localStorage.removeItem('loginId');
+    welcome.classList.remove('welcome_active');
+    signin.classList.add('signin_active');
+    form.reset();
 });
